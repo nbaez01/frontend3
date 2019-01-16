@@ -1,0 +1,171 @@
+<app-header></app-header>
+<!-- [INICIO] Dashboard Desktop y Mobile -->
+<section id="dashboard">
+  <!--[INICIO] Cabecera -->
+  <div class="box__table n_margin_pad" id="tabs">
+    <div class="box__tab__head">
+      <div class="row item__center">
+        <a (click)="cambiarTab('emitir')" data-key="emitir" data-key="emitir" class="col-3 tab__head ">
+          <div class="row">
+            <div class="col-12 col-md-3">
+              <div class="img__tab clipboard"></div>
+            </div>
+            <div class="nopadd flex col-12 col-md-9">
+              <div class="title">Por emitir</div>
+              <div class="price"> {{medicoUser.porEmitir}} </div>
+            </div>
+          </div>
+        </a>
+        <a (click)="cambiarTab('porpagar')" data-key="xcobrar" class="col-3 tab__head active">
+          <div class="row">
+            <div class="col-12 col-md-3">
+              <div class="img__tab boleta"></div>
+            </div>
+            <div class="nopadd flex col-12 col-md-9">
+              <div class="title">Por pagar </div>
+              <div class="price"> {{medicoUser.porPagar}} </div>
+            </div>
+          </div>
+        </a>
+        <a (click)="cambiarTab('pagado')" data-key="cobrado" class="col-3 tab__head ">
+          <div class="row">
+            <div class="col-12 col-md-3">
+              <div class="img__tab tick"></div>
+            </div>
+            <div class="nopadd flex col-12 col-md-9">
+              <div class="title">Pagado </div>
+              <div class="price"> {{medicoUser.pagada}} </div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+  <!--[FIN] Cabecera -->
+
+  <!-- Por cobrar table -->
+  <div class="xcobrar table__active show">
+    <div class="content">
+      <div class="bg__content">
+        <div class="mobile__tab row active">
+          <div class="col-8 tittle__tab">
+            <h3>Por pagar</h3>
+            <p>{{ medicoUser.porPagar }}</p>
+          </div>
+        </div>
+        <div class="h__53 flex tittle">
+          <div class="text-sky w-150px">Estado de Pago</div>
+          <div class="text-sky w-150px">Fecha de registro de comprobante</div>
+          <div class="text-sky w-150px">Código de liquidación</div>
+          <div class="text-sky w-180px">Nombre de liquidación</div>
+          <div class="text-sky w-150px">Total HH.MM. <br />(Con impuesto)</div>
+          <div class="text-sky w-120px">Detalle</div>
+        </div>
+        <div class="h__53 flex items" id="observadas" *ngFor="let planilla of planillaResponse | paginate: { itemsPerPage: itemsPorPag, currentPage: p }">
+          <div class="text-silver w-150px">
+            <p>Estado de Pago</p>
+            <div [ngClass]="{   'box_alert': planilla.estadoLiquidacion === 0,
+            'box_alert_2': planilla.estadoLiquidacion === 1, 
+            'box_alert_3': planilla.estadoLiquidacion === 2}">
+              {{ planilla.dias }}
+            </div>
+          </div>
+          <div class="text-silver w-150px">
+            <p>Fecha de registro de comprobante</p>
+            {{ planilla.fechaEmisionComp }}
+          </div>
+          <div class="text-silver w-150px">
+            <p>Código de liquidación</p>
+            {{ planilla.idPlanilla }}
+          </div>
+          <div class="text-silver w-180px">
+            <p>Nombre de liquidación</p>
+            {{ planilla.descripcion }}
+          </div>
+          <div class="bold text-silver w-150px">
+            <p>Total HH.MM. (Con impuesto)</p>
+            {{ planilla.monto | currency: 0 : "S/ "}}
+          </div>
+          <div class="text-silver w-120px">
+            <a (click)="verDetalle(planilla)" class="btn btn__green"> Ver</a>
+          </div>
+        </div>
+        <!--<div class="h__53 flex items" id="observadas">                            
+                      <div class="text-silver w-150px">
+                          <p>Estado de Pago</p>
+                          <div class="box_alert alert__red">
+                              -3 días
+                          </div>
+                      </div>
+                      <div class="text-silver w-150px">
+                          <p>Fecha de emisión de comprobante</p>
+                          11 / 09 / 2018
+                      </div>
+                      <div class="text-silver w-150px">
+                          <p>Código de liquidación</p>
+                          1978180417
+                      </div>
+                      <div class="text-silver w-180px">
+                          <p>Nombre de liquidación</p>
+                          Privado del 01/09 al 10/09
+                      </div>
+                      <div class="bold text-silver w-150px">
+                          <p>Total HH.MM.</p>
+                          S/ 1,500.00
+                      </div>
+                      <div class="text-silver w-120px">
+                          <a href="detalle.html" class="btn btn__green"> Ver</a>
+                      </div>
+              </div>
+              <div class="h__53 flex items" id="observadas">                            
+                      <div class="text-silver w-150px">
+                          <p>Estado de Pago</p>
+                          <div class="box_alert alert__red">
+                              -3 días
+                          </div>
+                      </div>
+                      <div class="text-silver w-150px">
+                          <p>Fecha de emisión de comprobante</p>
+                          11 / 09 / 2018
+                      </div>
+                      <div class="text-silver w-150px">
+                          <p>Código de liquidación</p>
+                          1978180417
+                      </div>
+                      <div class="text-silver w-180px">
+                          <p>Nombre de liquidación</p>
+                          Privado del 01/09 al 10/09
+                      </div>
+                      <div class="bold text-silver w-150px">
+                          <p>Total HH.MM.</p>
+                          S/ 1,500.00
+                      </div>
+                      <div class="text-silver w-120px">
+                          <a href="detalle.html" class="btn btn__green"> Ver</a>
+                      </div>
+              </div> -->
+      </div>
+      <div class="h__53 flex last__child">
+        <div class="paginator mr__28">
+          <pagination-controls class="my-pagination" (pageChange)="p = $event" previousLabel=" " nextLabel=" ">
+          </pagination-controls>
+        </div>
+        <div class="mr-auto">
+          <a [class.disabled]="disableExportar" (click)="imprimirExcel(6)" class="btn bg-green mr__28">Exportar Excel</a>
+          <a [class.disabled]="disableExportar" (click)="imprimirPdf(6)" class="btn bg-red mr__28"> Exportar PDF </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mobile_options">
+    <div class="circles_box">
+        <div (click)="imprimirExcel(6)" class="item bg__green" [hidden]="disableExportar">
+            XLS
+        </div>
+        <div (click)="imprimirPdf(6)" class="item bg__red" [hidden]="disableExportar">
+            PDF
+        </div>
+    </div>
+    <!-- <a class="register">Registrar comprobante</a> -->
+  </div>
+</section>

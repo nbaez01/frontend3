@@ -1,0 +1,281 @@
+<app-header></app-header>
+
+<section id="rhe">
+
+    <div class="rxh">
+        <div class="rnone row item__center">
+            <div class="col-4 col-md-1">
+                <a (click)="anteriorPagina()" class="regresar">
+                </a>
+            </div>
+            <div class="col-8 col-md-8">
+                <h2> Proceso de emisión</h2>
+            </div>
+        </div>
+        <form></form>
+        <div class="row reverse">
+            <div class="col-md-6 col-12">
+                <div class="container tab-col">
+                    <div class="tittle">
+                        <div class="item-tittle">
+                            <p>Fecha de liquidación</p>
+                        </div>
+                        <div class="item-tittle">
+                            <p>Código de liquidación
+                            </p>
+                        </div>
+                        <div class="item-tittle">
+                            <p>Nombre de liquidación
+                            </p>
+                        </div>
+                        <div class="item-tittle">
+                            <p>Total HH.MM. (Sin Impuesto)
+                            </p>
+                        </div>
+                        <div class="item-tittle">
+                            <p>&nbsp;</p>
+                        </div>
+                    </div>
+
+                    <div class="content" *ngFor="let planilla of listPlanillasRegistro">
+                        <div class="rnone item-content">
+                            <p>{{ planilla.fechaCreacion }}</p>
+                        </div>
+                        <div class="noborder item-content">
+                            <p class="rshow">Código de liquidación</p>
+                            <p>{{ planilla.idPlanilla }}</p>
+                        </div>
+                        <div class="rnone item-content">
+                            <!-- <p>Privado del <br> 01/09 al 10/09</p> -->
+                            <p>{{ planilla.descripcion }}</p>
+                        </div>
+                        <div class="item-content start-2">
+                            <p class="rshow">Total HH.MM. (Sin Impuesto)</p>
+                            <p>{{ planilla.valorVenta | currency: 0 : "S/ "}}</p>
+                        </div>
+                        <div class="item-content ex-f">
+                            <div class="ex" (click)="quitarPlanilla(planilla, template)"></div>
+                        </div>
+                    </div>
+                    <div class="empty">
+                        <div class="item-empty">
+                            <p>&nbsp;</p>
+                        </div>
+                        <div class="item-empty">
+                            <p>&nbsp;</p>
+                        </div>
+                        <div class="item-empty">
+                            <p>&nbsp;</p>
+                        </div>
+                        <div class="item-empty">
+                            <p>&nbsp;</p>
+                        </div>
+                        <div class="item-empty">
+                            <p>&nbsp;</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-6 col-12">
+                <div class="row">
+                    <div class="col-md-7 col-12">
+                        <div class="tab_rxh">
+                            <div class="tab-fac-rhe">
+                                <a id="idTabFactura" class="btn tab_g tab-fac" (click)="tabFactura()">
+                                    <span>Factura</span>
+                                </a>
+                                <a id="idTabRHE" class="btn tab_g tab-rhe active" (click)="tabRhe()">
+                                    <span>RHE</span>
+                                </a>
+                            </div>
+                            <div class="tab-content">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <p>Sub total de liquidaciones</p>
+                                        <p id="idParrafoIgv">4ta. categoría</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p>{{ montoSubTotal | currency: 0 : "S/ "}}</p><br>
+                                        <p>{{ montodescuento | currency: 0 : "S/ "}}</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <p>Total</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p><strong>{{ montoTotal | currency: 0 : "S/ "}}</strong></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5 col-12">
+                        <div class="input-info">  
+                            <div>
+                                <input type="text" id="serieProceso" #seriePE="ngModel" name="comprobantePE" class="mb-10 form-control" [(ngModel)]="comprobanteProcesoE.comprobanteSerie" [placeholder]="placeHldSerie" required >
+                            </div>
+                            <div *ngIf="(seriePE.touched && !seriePE.valid)||(submitted&&!seriePE.valid)">
+                            <span class="text-danger">Serie requerida</span>
+                            </div>
+                            <div>
+                                <input type="text" id="numeroProceso" #numeroPE="ngModel" class="mb-10 form-control" [(ngModel)]="comprobanteProcesoE.comprobanteNumero" [placeholder]="placeHldNumero" required>
+                            </div>
+                            <div *ngIf="(numeroPE.touched && !numeroPE.valid) ||(submitted&&!numeroPE.valid)">
+                                    <span class="text-danger">Número requerido</span>
+                            </div>
+                            <div>
+                                <input type="date" id="fechaEmiProceso" #fechaPE="ngModel" class="form-control" [(ngModel)]="comprobanteProcesoE.fechaEmision" required>
+                            </div>
+                            <div *ngIf="(fechaPE.touched && !fechaPE.valid)||(submitted&&!fechaPE.valid)">
+                                    <span class="text-danger">Fecha emisión requerida</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row item__center mt-20" [hidden]="!divRHE">
+                    <div class="col-5">
+                        <p class="nomargin">¿Retención de 4ta categoría?</p>
+                    </div>
+                    <div class="col-5 col-md-3">
+                        <div class="row item__center">
+                            <div class="col-6">
+                                <a id="idConRetencion" class="btn c_g active nomargin" (click)="getSIvalues()">SI</a>
+                            </div>
+                            <div class="col-6">
+                                <a id="idSinRetencion" class="btn c_g nomargin" (click)="getNOvalues()">NO</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4 rmt-20" *ngIf="divNoRHE">
+                        <input type="text" id="numCertfNR" #nroCertNR="ngModel" class="form-control"   [(ngModel)]="comprobanteProcesoE.nroCertificado"  placeholder="Certificado de no retención:" required>
+                        <div *ngIf="(submitted && !nroCertNR.valid) && certfObligatorio">
+                                <span class="text-danger">Nro de Certifiado requerido</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-20">
+                    <div id="idSeccAdjComprobante" class="col-12">
+                        <div class="adjunt">
+                            <p>Adjunta tu comprobante electrónico</p>
+                            <div class="box_file">
+                                <div id="idDivDragComprobante" *ngIf="validaDrag">
+                                    <file-drop headertext="Arrastra el archivo aquí" (onFileDrop)="dropped($event)" (onFileOver)="fileOver($event)" (onFileLeave)="fileLeave($event)">
+                                    </file-drop>
+                                    <p>o</p>
+                                </div>
+                                <label for="file-upload-comprobante" class="custom-file-upload">
+                                    <i class="fa fa-cloud-upload"></i>
+                                     Elegir archivo
+                                </label>
+                                <input id="file-upload-comprobante" type="file" (change)="getFileNameComprobante($event)" accept="application/pdf" />
+                            </div>
+                            <div class="row mt-20 mb-20 ">
+                                <div class="col-1" *ngIf="divImagePdfComprobante">
+                                    <div class="pdf"></div>
+                                </div>
+                                <div id="idNombreComprobante" class="col-8">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6" *ngIf="divNoRHE">
+                        <div class="adjunt">
+                            <p>Adjunta tu certificado de no retención</p>
+                            <div class="box_file">
+                                <!-- <p>Arrastra el archivo aqui</p> -->
+                                <div id="idDivDragRetencion" *ngIf="validaDrag">
+                                    <file-drop headertext="Arrastra el archivo aquí" (onFileDrop)="retencionDropped($event)">
+                                    </file-drop>
+                                    <p>o</p>
+                                </div>
+                                <label for="file-upload-retencion" class="custom-file-upload">
+                                    <i class="fa fa-cloud-upload"></i>
+                                     Elegir archivo
+                                </label>
+                                <input id="file-upload-retencion" type="file" (change)="getFileNameRetencion($event)" accept="application/pdf" />
+                            </div>
+                            <div class="nomargin row mt-20 mb-20">
+                                <div class="col-1" *ngIf="divImagePdfRetencion">
+                                    <div class="pdf"></div>
+                                </div>
+                                <div id="idNombreRetencion" class="col-8">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row item__center mb-20">
+                    <div class="col-12 col-md-8 text-center">
+                        <label for="terms-acept">
+                                <input type="checkbox" name="terms-acept" id="terms-acept" (change)="checkTerminos($event)">
+                                Acepto los <a class="term" data-toggle="modal" data-target=".modalTerminosCondiciones" >términos y condiciones</a>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <!-- <button [disabled]="disableBtnRegComp" (click)="registrarProcesoEmision()">
+                            Registrar ahora
+                        </button> -->
+                        <a class="btn btn__skyP" type="submit" [class.disabled]="disableBtnRegComp" (click)="registrarProcesoEmision(tmpRegistroExitoso,tmpRegistroErroneo)">Registrar ahora</a>
+                    </div>
+                </div>
+            </div>
+        </div> 
+    </div>
+</section>
+<ng4-loading-spinner> </ng4-loading-spinner>
+
+<!-- <section id="terminos_box"> -->
+    <div class="modal fade modalTerminosCondiciones" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!-- <h3 class="modal-title pull-left" style="color:#00AAC9;font-family:sans-serif">Términos y Condiciones</h3> -->
+                    <div class="terminos">
+                        <div class=" box_t">
+                            <p class="title">
+                                Términos y condiciones
+                            </p>
+                        </div>
+                    </div>
+                    <span aria-hidden="true" class="close" data-dismiss="modal" aria-label="Close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div class="terminos">
+                        <div class=" box_t">
+                            <p class="text">{{terminosCondiciones}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- </section> -->
+
+<ng-template #template>
+    <div class="modal-body">
+            <p class="mtext red text-center">Eliminar recibo</p>
+        <!-- <p class="text-center">¿Esta seguro de eliminar este recibo? Recuerde que podrá emitirlo después.</p> -->
+        <p class="text-center">¿Esta seguro de eliminar este recibo? Debe haber al menos una liquidación en el registro del comprobante. </p>
+        <a class="btn bg_red btn__sky mt-20" (click)="eliminaPlanilla();">Eliminar</a>
+    </div>
+</ng-template>
+
+<ng-template #tmpRegistroExitoso>
+    <div class="modal-body">
+        <p class="mtext text-center">Registro exitoso</p>
+        <p class="text-center">Comprobantes emitidos. Gracias por emitir el comprobante. Cualquier observación le contactaremos a la brevedad.</p>
+        <a class="btn btn__sky mt-20" (click)="backDashboard()">Aceptar</a>
+        <br>
+    </div>
+</ng-template>
+
+<ng-template #tmpRegistroErroneo>
+    <div class="modal-body">
+        <p class="mtext text-center">No se registró</p>
+        <p class="text-center">Comprobantes emitidos. No se pudo registrar el comprobante. Por favor contactarse  con nosotros.</p>
+        <a class="btn btn__sky mt-20" (click)="modalRef.hide()">Aceptar</a>
+        <br>
+    </div>
+</ng-template>

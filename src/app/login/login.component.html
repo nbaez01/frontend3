@@ -1,0 +1,46 @@
+<section id="login">
+  <div class="container">
+    <div class="login__box">
+      <div class="row">
+        <div class="col-12 col-md-12">
+          <div class="logo ico-logo"></div>
+        </div>
+      </div>
+      <form id="loginForm" [formGroup]="valForm" novalidate="" (ngSubmit)="loginValidation($event,valForm)">
+        <div class="form-row">
+          <div class="col-12 col-md-12">
+            <label class="label__user" for="user">
+              <input placeholder="usuario" formControlName="user" class="nobg form-control" type="text" id="user" name="user"
+                [(ngModel)]="loginUser.usuario" required>
+              <span class="texto-danger" *ngIf="valForm.controls['user'].hasError('required') && (valForm.controls['user'].dirty || valForm.controls['user'].touched) && sumited">El
+                usuario es requerido</span>
+              <!-- <span class="texto-danger" *ngIf="valForm.controls['user'].hasError('email') && (valForm.controls['user'].dirty || valForm.controls['user'].touched) && sumited">El usuario no tiene el formato correcto</span> -->
+            </label>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col-12 col-md-12">
+            <label class="label__lock" for="pass">
+              <input placeholder="password" formControlName="pass" class="nobg form-control" type="password" id="pass"
+                name="pass" [(ngModel)]="loginUser.password" required>
+              <span class="texto-danger" *ngIf="valForm.controls['pass'].hasError('required') && (valForm.controls['pass'].dirty || valForm.controls['pass'].touched) && sumited">La
+                contraseña es requerida <br /></span>
+            </label>
+          </div>
+        </div>
+        <button type="submit">
+          ingresar
+        </button>
+      </form>
+
+      <div *ngIf="boxAlerta" class="boxNotificacion col-sm-12 col-md-12 col-lg-12">
+        <!-- <ng-alert-login></ng-alert-login> -->
+        <p>{{msgBoxAlerta}}</p>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+<ng4-loading-spinner></ng4-loading-spinner>

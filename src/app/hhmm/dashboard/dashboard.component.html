@@ -1,0 +1,155 @@
+<app-header></app-header>
+<!-- [INICIO] Dashboard Desktop y Mobile -->
+<section id="dashboard">
+    <!--[INICIO] Cabecera -->
+    <div class="box__table n_margin_pad" id="tabs">
+        <div class="box__tab__head">
+            <div class="row item__center">
+                <a (click)="cambiarTab('emitir')" data-key="emitir" class="col-3 tab__head {{estado[0]}}">
+                    <div class="row">
+                        <div class="col-12 col-md-3">
+                            <div class="img__tab clipboard"></div>
+                        </div>
+                        <div class="nopadd flex col-12 col-md-9">
+                            <div class="title">Por emitir</div>
+                            <div class="price"> {{medicoUser.porEmitir}} </div>
+                        </div>
+                    </div>
+                </a>
+                <a (click)="cambiarTab('porpagar')" data-key="xcobrar" class="col-3 tab__head {{estado[1]}}">
+                    <div class="row">
+                        <div class="col-12 col-md-3">
+                            <div class="img__tab boleta"></div>
+                        </div>
+                        <div class="nopadd flex col-12 col-md-9">
+                            <div class="title">Por pagar </div>
+                            <div class="price"> {{medicoUser.porPagar}} </div>
+                        </div>
+                    </div>
+                </a>
+                <a (click)="cambiarTab('pagado')"  data-key="cobrado" class="col-3 tab__head {{estado[2]}}">
+                    <div class="row">
+                        <div class="col-12 col-md-3">
+                            <div class="img__tab tick"></div>
+                        </div>
+                        <div class="nopadd flex col-12 col-md-9">
+                            <div class="title">Pagado </div>
+                            <div class="price"> {{medicoUser.pagada}} </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!--[FIN] Cabecera -->
+    <!--[INICIO] Cuerpo -->
+    <div class="emitir table__active show">
+        <div class="content">
+            <div class="bg__content">
+                <div class="mobile__tab row active">
+                    <div class="col-8 tittle__tab">
+                        <h3>Por emitir</h3>
+                        <p>{{ medicoUser.porEmitir }}</p>
+                        <label class="text-check" for="all">
+                        <input type="checkbox" id="allMobile" (click)="selectAll();">
+                        Marcar todo
+                        </label>
+                    </div>
+                </div>
+                <div class="h__53 flex tittle">
+                    <!-- Desktop checkbox -->
+                    <div class="text-sky w-40px">
+                        <input class="" id="allDescktop" [checked]="flagCheckedAll" type="checkbox" (change)="selectAll();">                        
+                    </div>
+                    <div class="text-sky w-75px"></div>
+                    <div class="text-sky w-150px">Estado de liquidación</div>
+                    <div class="text-sky w-150px">Fecha de liquidación</div>
+                    <div class="text-sky w-150px">Código de liquidación</div>
+                    <div class="text-sky w-180px">Nombre de liquidación</div>
+                    <div class="text-sky w-150px">Total HH.MM. <br/>(Sin Impuesto)</div>
+                    <div class="text-sky w-120px">Detalle</div>
+                </div>
+                <div class="h__53 flex items" id="observadas" *ngFor="let planilla of listaPlanillas | paginate: { itemsPerPage: itemsPorPag, currentPage: p }">
+                    <div class="text-silver w-40px remove">
+                        <input type="checkbox" name="listaPlantillas" (change)="checkBoxPlanilla(planilla)"  id="{{planilla.idPlanilla}}"  [(ngModel)]="planilla.checked">
+                    </div>
+                    <div class="text-silver w-75px remove">
+                        <!-- <div [ngClass]="{'admir': planilla.observadaFlag==1}" data-toggle="popover" title="Observación" data-content="And here's some amazing content. It's very engaging. Right?"></div> -->
+                        <div [ngClass]="{'admir': planilla.observadaFlag==1}" placement="right" popoverTitle="Observación" ngbPopover="{{planilla.observadaDesc}}" triggers="mouseenter:mouseleave"></div>
+                    </div>
+                    <div class="text-silver w-150px">
+                        <label for="">
+                        <input class="" type="checkbox" name="listaPlantillas" (change)="checkBoxPlanilla(planilla)" [(ngModel)]="planilla.checked">
+                        <p>Estado de liquidación</p>
+                        </label>
+                        <div [ngClass]="{   'box_alert': planilla.estadoLiquidacion === 0,
+                                            'box_alert_2': planilla.estadoLiquidacion === 1, 
+                                            'box_alert_3': planilla.estadoLiquidacion === 2}">
+                            {{ planilla.dias }}
+                        </div>
+                    </div>
+                    <div class="text-silver w-150px">
+                        <p>Fecha de liquidación</p>
+                        {{ planilla.fechaCreacion }}
+                    </div>
+                    <div class="text-silver w-150px">
+                        <p>Código de liquidación</p>
+                        {{ planilla.idPlanilla }}
+                    </div>
+                    <div class="text-silver w-180px">
+                        <p>Nombre de liquidación</p>
+                        {{ planilla.descripcion }}
+                    </div>
+                    <div class="bold text-silver w-150px">
+                        <p>Total HH.MM. (Sin impuesto)</p>
+                        {{ planilla.valorVenta | currency: 0 : "S/ "}}
+                    </div>
+                    <div class="text-silver w-120px">
+                        <div class="fw item__center row nomargin">
+                            <div class="nopadding col-10 col-md-12">
+                                <a (click)="verDetalle(planilla)" class="btn btn__green err"> Ver</a>
+                            </div>
+                            <div class="col-2 rshow">
+                                <div [ngClass]="{'admir': planilla.observadaFlag==1}" placement="top" popoverTitle="Observación" ngbPopover="{{planilla.observadaDesc}}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="h__53 flex last__child">
+                <div class="paginator mr__28">                    
+                    <pagination-controls class="my-pagination" (pageChange)="p = $event" 
+                        previousLabel=" " nextLabel=" ">           
+                    </pagination-controls>                      
+                </div>
+                <div class="mr-auto">
+                    <a [class.disabled]="disableExportar" (click)="imprimirExcel(4)"class="btn bg-green mr__28">Exportar Excel</a>
+                    <a [class.disabled]="disableExportar" (click)="imprimirPdf(4)" class="btn bg-red mr__28"> Exportar PDF </a>
+                </div>
+                <div class="mr__28">
+                    {{ cantidadSeleccionados }} Seleccionados
+                </div>
+                <div class="mr__28">
+                    <a class="btn bg-sky" [class.disabled]="disableRegistrarComprobante" (click)="registrarComprobante()">Registrar comprobante</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- [FIN] Cuerpo -->
+    <!-- [INICIO] Opciones descarga mobile -->
+    <div class="mobile_options">
+        <div class="circles_box">
+            <div (click)="imprimirExcel(4)" class="item bg__green" [hidden]="disableExportar">
+                XLS
+            </div>
+            <div (click)="imprimirPdf(4)" class="item bg__red" [hidden]="disableExportar">
+                PDF
+            </div>
+        </div>
+        <a class="btn register" [class.disabled]="disableRegistrarComprobante" (click)="registrarComprobante()">Registrar comprobante</a>
+    </div>
+    <!-- [FIN] Opciones descarga mobile -->   
+</section>
+
+
+<!-- [INICIO] Dashboard Desktop y Mobile -->

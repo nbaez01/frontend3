@@ -1,0 +1,120 @@
+<app-header></app-header>
+<section id="dashboard">
+  <div class="box__table detalle" id="tabs">
+    <div class="row item__center">
+      <div class="rnone col-md-1">
+        <a (click)="anteriorPagina()" class="regresar">
+        </a>
+      </div>
+      <div class="col-8 col-md-8 ">
+        <p class="t-s"> <strong> Nombre de Banco:</strong> {{ nombreBanco }}</p>
+        <p class="t-s"> <strong>Número de cuenta:</strong> {{ nroCuenta }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="detalle table__active show">
+    <div class="content">
+      <div class="bg__content">
+        <!-- row head -->
+        <div class="h__53 flex tittle">
+          <div class="text-sky w-100px">
+            Tipo de
+            encuentro
+          </div>
+          <div class="text-sky w-100px">
+            Número de
+            encuentro
+          </div>
+          <div class="text-sky w-100px">
+            Código de prestación
+          </div>
+          <div class="text-sky w-100px">
+            Nombre de la
+            prestación
+          </div>
+          <div class="text-sky w-100px">
+            Pagador
+          </div>
+          <div class="text-sky w-100px">
+            Fecha de
+            apunte
+          </div>
+          <div class="text-sky w-100px">
+            Nombre del
+            paciente
+          </div>
+          <div class="text-sky w-100px">
+            Importe
+          </div>
+          <div class="text-sky w-100px">
+            Porcentaje de retención
+          </div>
+          <div class="text-sky w-100px">Total HH.MM.</div>
+        </div>
+
+        <div class="h__53 flex items" *ngFor="let liquidacion of planillaDetalle | paginate: { itemsPerPage: itemsPorPag, currentPage: p }">
+          <div class="text-silver w-100px">
+            <p>Tipo de encuentro</p>
+            {{ liquidacion.tipoAtencionDesc }}
+          </div>
+          <div class="text-silver w-100px">
+            <p>Número de encuentro</p>
+            {{ liquidacion.idOrdenAtencion }}
+          </div>
+          <div class="text-silver w-100px">
+            <p>Código de prestación</p>
+            {{ liquidacion.componenteCodigo }}
+          </div>
+          <div class="text-silver w-100px">
+            <p>Nombre de la prestación</p>
+            {{ liquidacion.componenteDesc }}
+          </div>
+          <div class="bold text-silver w-100px">
+            <p>Pagador</p>
+            {{ liquidacion.tipoPacienteDesc }}
+          </div>
+          <div class="text-silver w-100px">
+            <p>Fecha de apunte</p>
+            {{ liquidacion.fechaAtencion }}
+          </div>
+          <div class="text-silver w-100px">
+            <p>Nombre del paciente</p>
+            {{ liquidacion.nombreCompleto }}
+          </div>
+          <div class="text-silver w-100px">
+            <p>Importe</p>
+            {{ liquidacion.montoTotal }}
+          </div>
+          <div class="bold text-silver w-100px">
+            <p>Porcentaje de retención</p>
+            {{ liquidacion.valorFactor }}%
+          </div>
+          <div class="text-silver w-100px">
+            <p>Total HH.MM.</p>
+            {{ liquidacion.montoHhmm }}
+          </div>
+        </div>
+      </div>
+      <div class="h__53 flex last__child">
+        <div class="paginator mr__28">
+          <pagination-controls class="my-pagination" (pageChange)="p = $event" previousLabel=" " nextLabel=" ">
+          </pagination-controls>
+        </div>
+        <div class="ml-auto">
+          <a (click)="imprimirDetalleExcel()" class="btn bg-green mr__28">Exportar Excel</a>
+          <a (click)="imprimirDetallePdf()" class="btn bg-red mr__28"> Exportar PDF </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mobile_options">
+    <div class="circles_box">
+      <div (click)="imprimirDetallePdf()" class="item bg__green">
+        PDF
+      </div>
+      <div (click)="imprimirDetalleExcel()" class="item bg__red">
+        XLS
+      </div>
+    </div>
+  </div>
+</section>

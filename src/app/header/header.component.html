@@ -1,0 +1,163 @@
+<!-- [INICIO] Cabecera Desktop-->
+<div class="desktop">
+    <div class="row flex nomargin">
+        <div class="col-4 col-md-4">
+            <div class="logo__head"></div>
+        </div>
+        <div class="col-8 col-md-8">
+            <ul class="nav_desktop">
+                <li class="bell_click" id="adviceBell" >
+                    <!-- <a class="bell_box nav-link" href="#"> -->
+                    <a [ngClass]="{'bell_box': listnotificacion.length === 0,
+                    'bell_box_2': listnotificacion.length > 0}">
+                        <div class="btn ico-bell" (click)="eventoBell();"></div>
+                    </a>
+                    <div class="row nomargin despegable" >
+                        <div class="col-12 notificacion" style="width: 360px;">
+                            <div class="row nomargin">
+                                <div class="col-12">
+                                    <p class="nb">Liquidaciones observadas:</p>
+                                </div>  
+                            </div>
+                            <div class="row nomargin" *ngFor="let notificacion of listnotificacion  ">
+                                <div class="col-8">
+                                    <p>Código de liquidación</p>
+                                    {{notificacion.idPlanilla}}
+                                </div>
+                                <div class="col-4">
+                                    <p>Importe</p>
+                                    {{notificacion.valorVenta | currency: 0 : "S/ "}}
+                                </div>
+                            </div>
+                            <!-- <div class="row nomargin">
+                                <div class="col-7">
+                                    <p>Código de liquidación</p>
+                                    AUNA00001
+                                </div>
+                                <div class="col-5">
+                                    <p>Importe</p>
+                                    S/ 1,500.00
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+                </li>
+                <li class="">
+                    <div class="dropdown">
+                        <button class="btn dropdown-toggle normal" type="button" (click)="cbHeader()" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Clínica {{cmbHeader.nombresed_vch}}
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                            <a class="dropdown-item" *ngFor="let sede of listSede" (click)="cmbHeaderEvnt(sede);">Clínica {{ sede.nombresed_vch }}</a>
+                        </div>
+                    </div>
+                </li>
+                <li class="">
+                    <a class="nav-link dropdown-toggle white avt" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{medicoUser.titulo}} {{medicoUser.apemat}}
+          </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" (click)="descargarProtocolo()">Protocolos de hh.mm.</a>
+                        <a class="dropdown-item"  (click)="logoutSesion()">Cerrar sesion</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- [FIN] Cabecera Desktop-->
+
+<!-- [INICIO] Cabecera Mobile-->
+<div class="mobile">
+    <div class="row nomargin mb">
+        <div class="col-2">
+            <div class="mavt"></div>
+            <a (click)="volverDashEmitir()" class="regresar-white"></a>
+        </div>
+        <div class="col-2">
+            <div class="bell_box r_click" (click)="mblevntBell();">
+                <div class="ico-bell bell_click" alt=""></div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="mlogo"></div>
+        </div>
+        <div class="col-2 offset-2">
+            <div class="menu_mobile" (click)="evntMenuDesplegado();"></div>
+        </div>
+    </div>
+    <div class="row nomargin">
+        <div class="col-12 r_notificacion notificacion" id="mblAdviceBell">
+            <div class="row nomargin">
+                <div class="col-12">
+                    <p class="nb">Liquidaciones observadas:</p>
+                </div>
+            </div>
+            <div class="row nomargin" *ngFor="let notificacion of listnotificacion  ">
+                <div class="col-7">
+                    <p>Código de liquidación</p>
+                    {{notificacion.idPlanilla}}
+                </div>
+                <div class="col-5">
+                    <p>Importe</p>
+                    {{notificacion.valorVenta | currency: 0 : "S/ "}}
+                </div>
+            </div>
+        </div>
+        <div class="menu_desplegado" id="mblMenuDesplegado">
+            <div class="row nomargin">
+                <div class="col-12">
+                    <div class="md_item" (click)="descargarProtocolo()" >Protocolos de hh.mm.</div>
+                </div>
+                <div class="col-12">
+                    <div class="md_item" (click)="logoutSesion()">Cerrar sesión</div>
+                </div>
+                <div class="col-12">
+                    <p class="title">Elegir clínica:</p>
+                    <div class="row clinica_lista">
+                        <div class="col-12">
+                            <p class="list" *ngFor="let sede of listSede" (click)="cmbHeaderEvnt(sede);">Clínica {{ sede.nombresed_vch }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- [FIN] Cabecera Mobile-->
+
+<script>
+    $(document).ready(function() {
+        alert("Hello! I am an alert box!!");
+    });
+    $(".bell_click").click(function() {
+        $(this).toggleClass("active");
+    })
+    $(".r_click").click(function() {
+        $(".menu_desplegado").removeClass("active")
+        $(".r_notificacion").toggleClass("active");
+    })
+    $(".menu_mobile").click(function() {
+        $(".r_notificacion").removeClass("active");
+        $(".menu_desplegado").toggleClass("active")
+    })
+    $(".btn").click(function() {
+        $(".bell_click").removeClass("active")
+    })
+    $('.admir').popover({
+        trigger: "manual"
+    }).on("mouseenter", function() {
+        var _this = this;
+        $(this).popover("show");
+        $(".popover").on("mouseleave", function() {
+            $(_this).popover('hide');
+        });
+    }).on("mouseleave", function() {
+        var _this = this;
+        setTimeout(function() {
+            if (!$(".popover:hover").length) {
+                $(_this).popover("hide")
+            }
+        }, 100);
+    });
+</script>

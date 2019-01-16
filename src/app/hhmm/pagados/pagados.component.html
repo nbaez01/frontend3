@@ -1,0 +1,240 @@
+<app-header></app-header>
+<section id="dashboard">
+  <!--[INICIO] Cabecera -->
+  <div class="box__table" id="tabs">
+    <div class="row mb-20 nomargin rnone">
+      <div class="flex col-3 nopadding">
+        <span>Filtrar por fecha:</span>
+        <select name="optFiltro" class="form-control" id="type" [(ngModel)]="opcionSeleccionado" (ngModelChange)="cambiarEstado(opcionSeleccionado)">
+          <option value=7>Última semana</option>
+          <option value=15>Últimos 15 días</option>
+          <option value=30>Último mes</option>
+          <option value=91>Últimos 3 meses </option>
+          <option value=0>Personalizado</option>
+        </select>
+      </div>
+      <div class="flex col-3 combos {{estadoCombo}}">
+        <span>Desde:</span> <input class="form-control" type="date" [(ngModel)]="fcFechaInicio" max={{fcFechaFin}}>
+      </div>
+      <div class="flex col-3 combos {{estadoCombo}}">
+        <span>Hasta:</span> <input class="form-control" type="date" [(ngModel)]="fcFechaFin" min={{fcFechaInicio}}>
+      </div>
+      <div class="col-3">
+        <a (click)="aplicarFiltro(opcionSeleccionado, tmpEnvioExitoso, tmpEnvioErroneo)" class="btn btn__sky">Procesar</a>
+      </div>
+    </div>
+    <div class="box__tab__head">
+      <div class="row item__center">
+        <a (click)="cambiarTab('emitir')" data-key="emitir" data-key="emitir" class="col-3 tab__head">
+          <div class="row">
+            <div class="col-12 col-md-3">
+              <div class="img__tab clipboard"></div>
+            </div>
+            <div class="nopadd flex col-12 col-md-9">
+              <div class="title">Por emitir</div>
+              <div class="price"> {{medicoUser.porEmitir}} </div>
+            </div>
+          </div>
+        </a>
+        <a (click)="cambiarTab('porpagar')" data-key="xcobrar" class="col-3 tab__head ">
+          <div class="row">
+            <div class="col-12 col-md-3">
+              <div class="img__tab boleta"></div>
+            </div>
+            <div class="nopadd flex col-12 col-md-9">
+              <div class="title">Por pagar </div>
+              <div class="price"> {{medicoUser.porPagar}} </div>
+            </div>
+          </div>
+        </a>
+        <a (click)="cambiarTab('pagado')" data-key="cobrado" class="col-3 tab__head active">
+          <div class="row">
+            <div class="col-12 col-md-3">
+              <div class="img__tab tick"></div>
+            </div>
+            <div class="nopadd flex col-12 col-md-9">
+              <div class="title">Pagado </div>
+              <div class="price"> {{medicoUser.pagada}} </div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+  <!--[FIN] Cabecera -->
+
+  <!-- Por cobrar table -->
+  <div class="cobrado table__active show">
+    <div class="content">
+      <div class="bg__content">
+        <!-- row head -->
+        <div class="mobile__tab row active">
+          <div class="col-8 tittle__tab">
+            <h3>Pagada</h3>
+            <p>{{ medicoUser.pagada }}</p>
+          </div>
+          <div class="col-4 cal__searh">
+            <div class="calendar" data-target=".modalFiltrar" data-toggle="modal"></div>
+          </div>
+        </div>
+        <div class="h__53 flex tittle">
+          <div class="text-sky w-150px">Fecha de registro del comprobante</div>
+          <div class="text-sky w-150px">Código de liquidación</div>
+          <div class="text-sky w-180px">Nombre de liquidación</div>
+          <div class="text-sky w-180px">Fecha de pago realizado</div>
+          <div class="text-sky w-150px">Total HH.MM. <br />(Con impuesto)</div>
+          <div class="text-sky w-120px">Detalle</div>
+        </div>
+
+        <div class="h__53 flex items" id="observadas" *ngFor="let planilla of planillaResponse | paginate: { itemsPerPage: itemsPorPag, currentPage: p }">
+          <div class="text-silver w-150px">
+            <p>Fecha de registro del comprobante</p>
+            {{ planilla.fechaEmisionComp }}
+          </div>
+          <div class="text-silver w-150px">
+            <p>Código de liquidación</p>
+            {{ planilla.idPlanilla }}
+          </div>
+          <div class="text-silver w-180px">
+            <p>Nombre de liquidación</p>
+            {{ planilla.descripcion }}
+          </div>
+          <div class="text-silver w-180px">
+            <p>Fecha de pago realizado</p>
+            {{ planilla.fechaPago }}
+          </div>
+          <div class="bold text-silver w-150px">
+            <p>Total HH.MM. (Con impuesto)</p>
+            {{ planilla.monto | currency: 0 : "S/ "}}
+          </div>
+          <div class="text-silver w-120px">
+            <a (click)="verDetalle(planilla)" class="btn btn__green"> Ver</a>
+          </div>
+        </div>
+        <!--<div class="h__53 flex items">
+          <div class="text-silver w-150px">
+            <p>Fecha de emisión del comprobante</p>
+            11 / 09 / 2018
+          </div>
+          <div class="text-silver w-150px">
+            <p>Código de liquidación</p>
+            1978180417
+          </div>
+          <div class="text-silver w-180px">
+            <p>Nombre de liquidación</p>
+            Privado del 01/09 al 10/09
+          </div>
+          <div class="text-silver w-180px">
+            <p>Fecha de pago realizado</p>
+            21 / 09 / 2018
+          </div>
+          <div class="bold text-silver w-150px">
+            <p>Total HH.MM.</p>
+            S/ 1,500.00
+          </div>
+          <div class="text-silver w-120px">
+            <a href="detalle.html" class="btn btn__green"> Ver</a>
+          </div>
+        </div>
+        <div class="h__53 flex items">
+          <div class="text-silver w-150px">
+            <p>Fecha de emisión del comprobante</p>
+            11 / 09 / 2018
+          </div>
+          <div class="text-silver w-150px">
+            <p>Código de liquidación</p>
+            1978180417
+          </div>
+          <div class="text-silver w-180px">
+            <p>Nombre de liquidación</p>
+            Privado del 01/09 al 10/09
+          </div>
+          <div class="text-silver w-180px">
+            <p>Fecha de pago realizado</p>
+            21 / 09 / 2018
+          </div>
+          <div class="bold text-silver w-150px">
+            <p>Total HH.MM.</p>
+            S/ 1,500.00
+          </div>
+          <div class="text-silver w-120px">
+            <a href="detalle.html" class="btn btn__green"> Ver</a>
+          </div>
+        </div>-->
+      </div>
+      <div class="h__53 flex last__child">
+        <div class="paginator mr__28">
+          <pagination-controls class="my-pagination" (pageChange)="p = $event" previousLabel=" " nextLabel=" ">
+          </pagination-controls>
+        </div>
+        <div class="mr-auto">
+          <a [class.disabled]="disableExportar" (click)="imprimirExcel(7)" class="btn bg-green mr__28">Exportar Excel</a>
+          <a [class.disabled]="disableExportar" (click)="imprimirPdf(7)" class="btn bg-red mr__28"> Exportar PDF </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mobile_options">
+    <div class="circles_box">
+        <div (click)="imprimirExcel(6)" class="item bg__green" [hidden]="disableExportar">
+            XLS
+        </div>
+        <div (click)="imprimirPdf(6)" class="item bg__red" [hidden]="disableExportar">
+            PDF
+        </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- modal -->
+<div class="modal fade modalFiltrar" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="row content-center">
+          <div class="col-9 nopadding">
+            <span>Filtrar por fecha:</span>
+            <select name="" class="form-control" id="mtype">
+              <option value="">Última semana</option>
+              <option value="">Últimos 15 días</option>
+              <option value="">Último mes</option>
+              <option value="">Últimos 3 meses </option>
+              <option value="p">Personalizado</option>
+            </select>
+          </div>
+          <div class="col-9 nopadding combos block">
+            <span>Desde:</span>
+            <input class="form-control" type="date">
+          </div>
+          <div class="col-9 combos block nopadding">
+            <span>Hasta:</span>
+            <input class="form-control" type="date">
+          </div>
+        </div>
+        <p class="mtext">Seleccione Fecha</p>
+        <input class="r-date" type="date">
+        <a class="btn btn__sky mt-20">Aplicar filtro</a>
+        <a class="text__sky mt-20">Cancelar</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #tmpEnvioExitoso>
+  <div class="modal-body">
+      <p class="mtext text-center">Solicitud exitosa</p>
+      <p class="text-center">La  solicitud de histórico de liquidaciones ha sido enviada con éxito. Usted recibirá un correo con la información solicitada en los próximos días.</p>
+      <a class="btn btn__sky mt-20" (click)="modalRef.hide()">Aceptar</a>
+      <br>
+  </div>
+</ng-template>
+
+<ng-template #tmpEnvioErroneo>
+  <div class="modal-body">
+      <p class="mtext text-center">Error en la solicitud</p>
+      <p class="text-center">Se generó un inconveniente al procesar la solicitud. Por favor contactar con el administrador del sistema.</p>
+      <a class="btn btn__sky mt-20" (click)="modalRef.hide()">Aceptar</a>
+      <br>
+  </div>
+</ng-template>
